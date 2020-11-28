@@ -11,12 +11,10 @@ jobs:
       name: release linux/amd64
       runs-on: ubuntu-latest
       steps:
-      - uses: actions/checkout@master
-      - name: compile and release
-        uses: ngs/go-release.action@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GOARCH: amd64
-          GOOS: linux
-          EXTRA_FILES: "README.md LICENSE"
+      - uses: actions/checkout@v2
+      - uses: wangyoucao577/go-release-action@v1.11
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: linux
+          goarch: amd64
 
