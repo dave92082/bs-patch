@@ -39,7 +39,16 @@ In the future I may try to add an auto-detection of this. For now this was quick
 ## Running the tool
 
 Once you have NodeJS set up, simply download the bs-patch tool from the Releases section
-of this repository and execute it:
+of this repository, create your config.yaml file, and then execute the tool:
+
+1. Download the release
+2. Extract the bs-patch binary
+3. Execute `which npm`
+4. Copy the path to the `bin` folder
+5. Create a file named `config.yaml` in the same folder as the `bs-patch` binary
+6. Execute `./bs-patch`
+7. (hopefully) Enjoy your new BluOS Controller app on Linux
+
 
 ```
 $ ./bs-patch 
