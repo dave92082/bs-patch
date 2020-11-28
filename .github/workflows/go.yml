@@ -1,10 +1,8 @@
 name: Go
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: 
+  release:
+    types: [created]
 
 jobs:
   release-linux-amd64:
