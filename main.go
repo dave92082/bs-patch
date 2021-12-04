@@ -3,9 +3,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/dustin/go-humanize"
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -13,6 +10,10 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+
+	"github.com/dustin/go-humanize"
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 func main() {
@@ -32,7 +33,6 @@ func main() {
 
 	currentPath := os.Getenv("PATH")
 	os.Setenv("PATH", fmt.Sprintf("%s:%s", currentPath, viper.GetString("nodeBinPath")))
-
 
 	log.Info("Finding Latest BluOS Controller")
 	l, err := getLatest()
@@ -59,7 +59,7 @@ func main() {
 		`    if(platform=='mac'){
         path = "/Applications/Spotify.app"
     }`,
-    `    if(platform=='mac'){
+		`    if(platform=='mac'){
         path = "/Applications/Spotify.app"
     }
     if(platform=='lin64') { path = "/snap/bin/spotify" }`)
@@ -100,7 +100,7 @@ func addNpmPackage(packageName string) error {
 	cmd.Dir = "./bluos"
 	var out bytes.Buffer
 	var eout bytes.Buffer
-	cmd.Stdout =  &out
+	cmd.Stdout = &out
 	cmd.Stderr = &eout
 	err := cmd.Run()
 	if err != nil {
@@ -115,7 +115,7 @@ func buildPackage() error {
 	cmd.Dir = "./bluos"
 	var out bytes.Buffer
 	var eout bytes.Buffer
-	cmd.Stdout =  &out
+	cmd.Stdout = &out
 	cmd.Stderr = &eout
 	err := cmd.Run()
 	if err != nil {
@@ -151,7 +151,7 @@ func extractAsar() error {
 			cmd := exec.Command(fmt.Sprintf("%s/npx", viper.GetString("nodeBinPath")), "asar", "extract", fmt.Sprintf("./controller/%s/BluOS Controller.app/Contents/Resources/app.asar", f.Name()), "./bluos")
 			var out bytes.Buffer
 			var eout bytes.Buffer
-			cmd.Stdout =  &out
+			cmd.Stdout = &out
 			cmd.Stderr = &eout
 			err := cmd.Run()
 			if err != nil {
@@ -163,9 +163,16 @@ func extractAsar() error {
 	return nil
 }
 
-func extractController() {
-	c := exec.Command("7z", "x", "-ocontroller", "./controller.dmg")
-	c.Run()
+func extractController() error {
+	cmd := exec.Command("7z", "x", "-ocontroller", "./controller.dmg")
+	var eout bytes.Buffer
+	cmd.Stderr = &eout
+	err := cmd.Run()
+	if err != nil {
+		log.Errorf("Error extracting controller: %s", eout.String())
+		return err
+	}
+	return nil
 }
 
 func getLatest() (*string, error) {
